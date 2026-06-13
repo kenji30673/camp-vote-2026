@@ -187,11 +187,14 @@
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
       text-align: center;
     }
-    .result-section h2 { font-size: 1.2em; color: #FF6B9D; margin-bottom: 10px; }
+    .result-section h2 { font-size: 1.2em; color: #FF6B9D; margin-bottom: 10px; line-height: 1.6; }
     .result-section p  { font-size: 0.9em; color: #666; margin-bottom: 20px; line-height: 1.7; }
 
     .result-btn {
-      display: inline-flex; align-items: center; gap: 8px;
+      display: inline-flex; align-items: center; justify-content: center;
+      flex-direction: column; /* ← 追加 */
+      line-height: 1.6;       /* ← 追加 */
+      gap: 2px;
       padding: 14px 32px; border-radius: 50px;
       background: linear-gradient(135deg, #43A047, #00ACC1);
       color: white; font-size: 1em; font-weight: bold;
@@ -417,7 +420,8 @@
       <li>グラフや一覧で結果が見られる📊</li>
     </ul>
     <a class="result-btn" id="btn-result" href="#" target="_blank" rel="noopener">
-      📊 回答結果を見る<br>（ママパパ用）
+      <span class="nowrap">📊 回答結果を見る</span>
+      <span class="nowrap">（ママパパ用）</span>
     </a>
   </div>
 

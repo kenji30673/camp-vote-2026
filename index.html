@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>☆花小 わんぱく5人組 夏休みキャンプ計画☆</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Hiragino Kundo ProN', 'メイリオ', sans-serif;
+      background: linear-gradient(135deg, #87CEEB 0%, #98FB98 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container { max-width: 900px; margin: 0 auto; }
+
+    /* ヘッダー */
+    .header {
+      background: linear-gradient(135deg, #FF6B9D, #FFB347);
+      border-radius: 20px; padding: 30px; text-align: center;
+      margin-bottom: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    .header h1 { font-size: 1.8em; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); margin-bottom: 10px; }
+    .header p  { color: white; font-size: 0.95em; line-height: 1.6; }
+    .bear-note {
+      background: rgba(255,255,255,0.3); border-radius: 10px;
+      padding: 10px 15px; margin-top: 12px; color: white; font-size: 0.9em;
+    }
+
+    /* 日程・メンバー */
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+    @media (max-width: 600px) { .info-grid { grid-template-columns: 1fr; } }
+    .info-card { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .info-card h3 { font-size: 1em; color: #FF6B9D; margin-bottom: 10px; border-bottom: 2px solid #FFE4EF; padding-bottom: 6px; }
+    .info-card p, .info-card li { font-size: 0.9em; color: #555; line-height: 1.8; }
+    .info-card ul { list-style: none; padding: 0; }
+    .info-card li::before { content: "👦 "; }
+
+    /* セクションタイトル */
+    .section-title {
+      text-align: center; font-size: 1.3em; color: #333;
+      margin-bottom: 8px; font-weight: bold;
+    }
+
+    /* アイコン説明コメント */
+    .icon-hint {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .icon-hint-inner {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: white;
+      border: 2px dashed #FFB3D1;
+      border-radius: 30px;
+      padding: 8px 20px;
+      font-size: 0.88em;
+      color: #E91E63;
+      line-height: 1.5;
+    }
+    .icon-hint-inner .hint-icon {
+      font-size: 1.2em;
+      animation: bounce 1.2s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0);   }
+      50%       { transform: translateY(-4px); }
+    }
+
+    /* コース */
+    .courses { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; }
+    @media (max-width: 700px) { .courses { grid-template-columns: 1fr; } }
+
+    .course-card {
+      background: white; border-radius: 18px; overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .course-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+
+    .course-header { padding: 20px 15px; text-align: center; color: white; }
+    .course-header .emoji { font-size: 2.5em; margin-bottom: 8px; }
+    .course-header h3 { font-size: 0.95em; line-height: 1.4; }
+    .course-header .location { font-size: 0.8em; margin-top: 5px; opacity: 0.9; }
+
+    .course-yamakawa .course-header { background: linear-gradient(135deg, #4CAF50, #2196F3); }
+    .course-umi      .course-header { background: linear-gradient(135deg, #FF9800, #F44336); }
+    .course-city     .course-header { background: linear-gradient(135deg, #9C27B0, #E91E63); }
+
+    .course-schedule { padding: 15px; max-height: 300px; overflow-y: auto; }
+    .schedule-day {
+      font-weight: bold; color: #666; font-size: 0.85em;
+      margin: 10px 0 5px; padding: 3px 8px;
+      background: #f5f5f5; border-radius: 5px;
+    }
+    .schedule-item {
+      display: flex; gap: 10px; padding: 5px 3px;
+      border-bottom: 1px dotted #eee; font-size: 0.82em; color: #555;
+    }
+    .schedule-item .time { min-width: 42px; color: #999; font-weight: bold; }
+
+    /* リンクエリア */
+    .course-links-label {
+      padding: 6px 15px 2px;
+      font-size: 0.78em;
+      color: #aaa;
+      text-align: left;
+    }
+    .course-links { padding: 4px 15px 15px; display: flex; flex-wrap: wrap; gap: 5px; }
+    .course-links a {
+      font-size: 0.75em; color: #2196F3; text-decoration: none;
+      background: #E3F2FD; padding: 3px 8px; border-radius: 10px;
+      transition: background 0.15s;
+    }
+    .course-links a:hover { background: #BBDEFB; }
+
+    /* ===== アンケートボタンセクション ===== */
+    .survey-section {
+      background: white; border-radius: 20px; padding: 35px 30px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 25px;
+      text-align: center;
+    }
+    .survey-section h2 { font-size: 1.2em; color: #FF6B9D; margin-bottom: 10px; }
+    .survey-section .lead {
+      font-size: 0.95em; color: #666; margin-bottom: 25px; line-height: 1.7;
+    }
+
+    /* コース別ボタン */
+    .form-buttons { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 20px; }
+    @media (max-width: 650px) { .form-buttons { grid-template-columns: 1fr; } }
+
+    .form-btn {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 6px; padding: 18px 10px; border-radius: 15px;
+      font-size: 0.9em; font-weight: bold; color: white;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      line-height: 1.4;
+    }
+    .form-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+    .form-btn .btn-emoji { font-size: 2em; }
+    .form-btn .btn-sub   { font-size: 0.78em; opacity: 0.9; }
+
+    .btn-yamakawa { background: linear-gradient(135deg, #4CAF50, #2196F3); }
+    .btn-umi      { background: linear-gradient(135deg, #FF9800, #F44336); }
+    .btn-city     { background: linear-gradient(135deg, #9C27B0, #E91E63); }
+
+    /* 一括ボタン */
+    .form-btn-all {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 10px; padding: 16px 40px; border-radius: 50px;
+      background: linear-gradient(135deg, #FF6B9D, #FFB347);
+      color: white; font-size: 1.05em; font-weight: bold;
+      text-decoration: none; border: none; cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255,107,157,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .form-btn-all:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(255,107,157,0.5); }
+
+    .or-divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 18px 0; color: #ccc; font-size: 0.85em;
+    }
+    .or-divider::before,
+    .or-divider::after { content: ''; flex: 1; height: 1px; background: #eee; }
+
+    /* 注意書き */
+    .notice {
+      margin-top: 18px; padding: 12px 16px;
+      background: #FFF8E1; border-radius: 10px;
+      font-size: 0.85em; color: #795548; line-height: 1.6;
+    }
+    .notice strong { color: #E65100; }
+
+    /* 結果確認セクション */
+    .result-section {
+      background: white; border-radius: 20px; padding: 30px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .result-section h2 { font-size: 1.2em; color: #FF6B9D; margin-bottom: 10px; }
+    .result-section p  { font-size: 0.9em; color: #666; margin-bottom: 20px; line-height: 1.7; }
+
+    .result-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 32px; border-radius: 50px;
+      background: linear-gradient(135deg, #43A047, #00ACC1);
+      color: white; font-size: 1em; font-weight: bold;
+      text-decoration: none; box-shadow: 0 4px 15px rgba(67,160,71,0.35);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .result-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(67,160,71,0.4); }
+
+    .step-list {
+      text-align: left; margin: 0 auto 20px; max-width: 420px;
+      font-size: 0.88em; color: #555; line-height: 2;
+    }
+    .step-list li { list-style: none; }
+    .step-list li::before { margin-right: 8px; }
+    .step-list li:nth-child(1)::before { content: "①"; }
+    .step-list li:nth-child(2)::before { content: "②"; }
+    .step-list li:nth-child(3)::before { content: "③"; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ヘッダー -->
+  <div class="header">
+    <h1>☆ 花小 わんぱく5人組<br>夏休みキャンプ計画 ☆</h1>
+    <p>📅 2026年8月1日(土) ～ 2日(日)</p>
+    <div class="bear-note">
+      🐻 最近クマさんが出てるから、今回テント泊はやめるよ💛<br>
+      お泊りは <strong>ロッジ or バンガロー</strong> にします！
+    </div>
+  </div>
+
+  <!-- 日程・メンバー -->
+  <div class="info-grid">
+    <div class="info-card">
+      <h3>📅 日程</h3>
+      <p>2026年 8月1日（土）～ 2日（日）</p>
+      <p style="margin-top:8px; color:#888; font-size:0.85em;">集合・解散：小前田北公園</p>
+    </div>
+    <div class="info-card">
+      <h3>👦 メンバー</h3>
+      <ul>
+        <li>あさひ（あさひパパ）</li>
+        <li>こうき（こうきパパ）</li>
+        <li>さく</li>
+        <li>はる</li>
+        <li>ようた（ようたパパ）</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- コース紹介 -->
+  <p class="section-title">🗺️ 3つのコースを確認してね！</p>
+
+  <!-- ★ アイコン説明コメント ★ -->
+  <div class="icon-hint">
+    <div class="icon-hint-inner">
+      <span class="hint-icon">👆</span>
+      <span>各コースの下にあるアイコンをタップすると<br>どんな場所か公式サイトで確認できるよ！</span>
+    </div>
+  </div>
+
+  <div class="courses">
+
+    <!-- 山川コース -->
+    <div class="course-card course-yamakawa">
+      <div class="course-header">
+        <div class="emoji">🏔️🎣</div>
+        <h3>山・川でたくさん冒険するコース</h3>
+        <div class="location">📍 群馬県</div>
+      </div>
+      <div class="course-schedule">
+        <div class="schedule-day">▶ 1日目</div>
+        <div class="schedule-item"><span class="time">9:00</span><span>小前田北公園に集合</span></div>
+        <div class="schedule-item"><span class="time">10:00</span><span>食材の買い物（途中スーパー）</span></div>
+        <div class="schedule-item"><span class="time">11:00</span><span>🎣 ニジマス釣り！（唐揚げにするよ）</span></div>
+        <div class="schedule-item"><span class="time">13:00</span><span>キャンプ場チェックイン＆探検</span></div>
+        <div class="schedule-item"><span class="time">16:00</span><span>♨️ 深い水風呂がある温泉</span></div>
+        <div class="schedule-item"><span class="time">17:00</span><span>🍖 BBQで晩御飯</span></div>
+        <div class="schedule-item"><span class="time">20:00</span><span>🎆 花火で悪ふざけ</span></div>
+        <div class="schedule-item"><span class="time">21:00</span><span>バンガローで夜更かし→就寝</span></div>
+        <div class="schedule-day">▶ 2日目</div>
+        <div class="schedule-item"><span class="time">7:30</span><span>朝のお散歩</span></div>
+        <div class="schedule-item"><span class="time">8:00</span><span>朝ごはんの準備</span></div>
+        <div class="schedule-item"><span class="time">10:00</span><span>キャンプ場チェックアウト</span></div>
+        <div class="schedule-item"><span class="time">11:00</span><span>お土産購入</span></div>
+        <div class="schedule-item"><span class="time">13:00</span><span>🚣 ラフティング＆キャニオニング</span></div>
+        <div class="schedule-item"><span class="time">19:00</span><span>小前田北公園で解散</span></div>
+      </div>
+      <div class="course-links-label">👆 タップして場所をチェック！</div>
+      <div class="course-links">
+        <a href="https://www.osaki-turibori.com/info/info01.html" target="_blank">🎣 釣り堀</a>
+        <a href="https://minakami-ariston.jp/" target="_blank">🏕️ キャンプ場</a>
+        <a href="https://suzumorinoyu.com/" target="_blank">♨️ 温泉</a>
+        <a href="https://www.fw-jp.com/" target="_blank">🚣 ラフティング</a>
+      </div>
+    </div>
+
+    <!-- 海コース -->
+    <div class="course-card course-umi">
+      <div class="course-header">
+        <div class="emoji">🌊🏖️</div>
+        <h3>こんがり日焼けコース</h3>
+        <div class="location">📍 茨城県</div>
+      </div>
+      <div class="course-schedule">
+        <div class="schedule-day">▶ 1日目</div>
+        <div class="schedule-item"><span class="time">9:00</span><span>小前田北公園に集合</span></div>
+        <div class="schedule-item"><span class="time">10:00</span><span>食材の買い物（途中スーパー）</span></div>
+        <div class="schedule-item"><span class="time">11:00</span><span>🌊 大洗サンビーチで海を満喫</span></div>
+        <div class="schedule-item"><span class="time">16:00</span><span>キャンプ場チェックイン＆探検</span></div>
+        <div class="schedule-item"><span class="time">17:00</span><span>♨️ 高そうな温泉で癒される</span></div>
+        <div class="schedule-item"><span class="time">18:00</span><span>🍖 BBQで晩御飯</span></div>
+        <div class="schedule-item"><span class="time">20:00</span><span>🎆 花火で悪ふざけ</span></div>
+        <div class="schedule-item"><span class="time">21:00</span><span>コンテナハウスで夜更かし→就寝</span></div>
+        <div class="schedule-day">▶ 2日目</div>
+        <div class="schedule-item"><span class="time">7:30</span><span>朝のお散歩</span></div>
+        <div class="schedule-item"><span class="time">8:00</span><span>朝ごはんの準備</span></div>
+        <div class="schedule-item"><span class="time">10:00</span><span>キャンプ場チェックアウト</span></div>
+        <div class="schedule-item"><span class="time">10:30</span><span>🌊 残った時間も海で全力遊び！</span></div>
+        <div class="schedule-item"><span class="time">15:00</span><span>🐟 水族館でお土産選び</span></div>
+        <div class="schedule-item"><span class="time">19:00</span><span>小前田北公園で解散</span></div>
+      </div>
+      <div class="course-links-label">👆 タップして場所をチェック！</div>
+      <div class="course-links">
+        <a href="https://www.oarai-info.jp/season/postid_2612/" target="_blank">🏖️ 大洗海水浴場</a>
+        <a href="https://www.oarai-camp.jp/page/page000050.html" target="_blank">🏕️ キャンプ場</a>
+        <a href="https://siosai.jp/" target="_blank">♨️ 温泉</a>
+        <a href="https://www.aquaworld-oarai.com/floor/" target="_blank">🐟 水族館</a>
+      </div>
+    </div>
+
+    <!-- シティーボーイコース -->
+    <div class="course-card course-city">
+      <div class="course-header">
+        <div class="emoji">🌆🎡</div>
+        <h3>シティーボーイにピッタリコース</h3>
+        <div class="location">📍 千葉県</div>
+      </div>
+      <div class="course-schedule">
+        <div class="schedule-day">▶ 1日目</div>
+        <div class="schedule-item"><span class="time">9:00</span><span>小前田北公園に集合</span></div>
+        <div class="schedule-item"><span class="time">10:00</span><span>食材の買い物（途中スーパー）</span></div>
+        <div class="schedule-item"><span class="time">11:00</span><span>💦 清水公園アクアベンチャーでビシャビシャ</span></div>
+        <div class="schedule-item"><span class="time">16:00</span><span>キャンプ場チェックイン＆探検</span></div>
+        <div class="schedule-item"><span class="time">17:00</span><span>🛁 徒歩5分の展望風呂で癒される</span></div>
+        <div class="schedule-item"><span class="time">18:00</span><span>🍖 BBQで晩御飯</span></div>
+        <div class="schedule-item"><span class="time">20:00</span><span>🎆 花火で悪ふざけ</span></div>
+        <div class="schedule-item"><span class="time">21:00</span><span>ロッジで夜更かし→就寝</span></div>
+        <div class="schedule-day">▶ 2日目</div>
+        <div class="schedule-item"><span class="time">7:30</span><span>朝のお散歩</span></div>
+        <div class="schedule-item"><span class="time">8:00</span><span>朝ごはんの準備</span></div>
+        <div class="schedule-item"><span class="time">10:00</span><span>キャンプ場チェックアウト</span></div>
+        <div class="schedule-item"><span class="time">10:30</span><span>🌳 清水公園フィールドアスレチック</span></div>
+        <div class="schedule-item"><span class="time">17:00</span><span>お土産購入</span></div>
+        <div class="schedule-item"><span class="time">19:00</span><span>小前田北公園で解散</span></div>
+      </div>
+      <div class="course-links-label">👆 タップして場所をチェック！</div>
+      <div class="course-links">
+        <a href="https://shimizu-kouen.jp/aqua/" target="_blank">💦 アクアベンチャー</a>
+        <a href="https://www.nap-camp.com/ibaraki/10145" target="_blank">🏕️ キャンプ場</a>
+        <a href="https://maruchiba.jp/feature/detail_319.html" target="_blank">🌳 アスレチック</a>
+      </div>
+    </div>
+
+  </div><!-- /courses -->
+
+  <!-- ===== アンケートボタンセクション ===== -->
+  <div class="survey-section">
+    <h2>📝 アンケートに答えてね！</h2>
+    <p class="lead">
+      コースを確認したら、下のボタンを押してアンケートに答えてね♪<br>
+      Google フォームが開くから、名前とコースを選んで送信してね！
+    </p>
+
+    <!-- コース別ボタン -->
+    <div class="form-buttons">
+      <a class="form-btn btn-yamakawa" id="btn-yamakawa" href="#" target="_blank" rel="noopener">
+        <span class="btn-emoji">🏔️🎣</span>
+        <span>山・川コースが気になる！</span>
+        <span class="btn-sub">→ フォームで回答する</span>
+      </a>
+      <a class="form-btn btn-umi" id="btn-umi" href="#" target="_blank" rel="noopener">
+        <span class="btn-emoji">🌊🏖️</span>
+        <span>海コースが気になる！</span>
+        <span class="btn-sub">→ フォームで回答する</span>
+      </a>
+      <a class="form-btn btn-city" id="btn-city" href="#" target="_blank" rel="noopener">
+        <span class="btn-emoji">🌆🎡</span>
+        <span>シティーボーイコースが気になる！</span>
+        <span class="btn-sub">→ フォームで回答する</span>
+      </a>
+    </div>
+
+    <div class="or-divider">どのボタンからでも同じフォームが開くよ</div>
+
+    <!-- 一括ボタン -->
+    <a class="form-btn-all" id="btn-all" href="#" target="_blank" rel="noopener">
+      📝 アンケートに答える！
+    </a>
+
+    <div class="notice">
+      ⚠️ <strong>1人1回</strong> 答えてね！<br>
+      もし間違えた場合は、もう一度フォームを開いて送信し直してね。<br>
+      （一番最後に送った回答を使うよ）
+    </div>
+  </div>
+
+  <!-- 結果確認セクション（幹事向け） -->
+  <div class="result-section">
+    <h2>📊 回答結果を確認する（幹事用）</h2>
+    <p>
+      Google フォームの回答は、自動的にスプレッドシートに保存されます。<br>
+      下のボタンから確認できます。
+    </p>
+    <ul class="step-list">
+      <li>Google フォームを開く</li>
+      <li>「回答」タブをクリック</li>
+      <li>グラフや一覧で結果が見られる📊</li>
+    </ul>
+    <a class="result-btn" id="btn-result" href="#" target="_blank" rel="noopener">
+      📊 回答結果を見る（幹事用）
+    </a>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+  // ========================================================
+  // 🔧 ここにGoogle FormsのURLを設定してください
+  // ========================================================
+  const FORM_URL        = "https://docs.google.com/forms/d/e/1FAIpQLSfM9Uz0qAkFio6abLbi1Erwco_40mCXiKCrUAbNeG4wQi1zIQ/viewform?usp=publish-editor";
+  const FORM_EDITOR_URL = "https://docs.google.com/forms/d/1kSY7Jx_QBnbYvta_IyJfCqgvXnhrdfhrhWFVlKn6mpI/edit#responses";
+  // ========================================================
+
+  // メンバー用ボタン（全て同じフォームURL）
+  document.getElementById('btn-yamakawa').href = FORM_URL;
+  document.getElementById('btn-umi').href      = FORM_URL;
+  document.getElementById('btn-city').href     = FORM_URL;
+  document.getElementById('btn-all').href      = FORM_URL;
+
+  // 幹事用ボタン
+  document.getElementById('btn-result').href   = FORM_EDITOR_URL;
+</script>
+
+</body>
+</html>

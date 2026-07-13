@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>☆花小 わんぱく5人組 夏休みキャンプ 旅費予算☆</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Hiragino Kundo ProN', 'メイリオ', sans-serif;
+      background: linear-gradient(135deg, #87CEEB 0%, #98FB98 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container { max-width: 860px; margin: 0 auto; }
+
+    /* ヘッダー */
+    .header {
+      background: linear-gradient(135deg, #4CAF50, #2196F3);
+      border-radius: 20px; padding: 28px 24px; text-align: center;
+      margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    .header h1 { font-size: 1.5em; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); margin-bottom: 8px; line-height: 1.5; }
+    .header p  { color: white; font-size: 0.9em; line-height: 1.6; opacity: 0.95; }
+
+    /* 決定バナー */
+    .decided-banner {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-left: 6px solid #4CAF50;
+    }
+    .decided-banner .decided-label {
+      font-size: 0.82em; font-weight: bold;
+      color: #4CAF50; letter-spacing: 2px; margin-bottom: 6px;
+    }
+    .decided-banner .decided-course {
+      font-size: 1.4em; font-weight: bold; color: #333;
+      margin-bottom: 6px;
+    }
+    .decided-banner .decided-sub {
+      font-size: 0.85em; color: #888;
+    }
+
+    /* 総費用カード */
+    .total-card {
+      background: linear-gradient(135deg, #FF6B9D, #FFB347);
+      border-radius: 18px; padding: 24px 20px; text-align: center;
+      margin-bottom: 20px; box-shadow: 0 6px 18px rgba(255,107,157,0.3);
+      color: white;
+    }
+    .total-card .total-label { font-size: 0.88em; opacity: 0.9; margin-bottom: 6px; }
+    .total-card .total-amount {
+      font-size: 2.6em; font-weight: bold;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.15);
+      letter-spacing: 2px;
+    }
+    .total-card .total-unit { font-size: 1em; font-weight: normal; }
+    .total-card .total-note { font-size: 0.8em; opacity: 0.85; margin-top: 8px; line-height: 1.6; }
+
+    /* セクションタイトル */
+    .section-title {
+      font-size: 1.05em; font-weight: bold; color: #333;
+      margin: 20px 0 10px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-title::after {
+      content: ''; flex: 1; height: 2px;
+      background: linear-gradient(90deg, #ddd, transparent);
+    }
+
+    /* 費用カード共通 */
+    .cost-card {
+      background: white; border-radius: 16px;
+      padding: 18px; margin-bottom: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .cost-card .card-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 12px; gap: 8px;
+    }
+    .cost-card .card-title {
+      font-size: 0.95em; font-weight: bold; color: #333; line-height: 1.5;
+    }
+    .cost-card .card-subtotal {
+      font-size: 0.88em; font-weight: bold; color: white;
+      background: #4CAF50; padding: 3px 10px; border-radius: 20px;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .cost-card .card-subtotal.blue   { background: #2196F3; }
+    .cost-card .card-subtotal.orange { background: #FF9800; }
+    .cost-card .card-subtotal.purple { background: #9C27B0; }
+    .cost-card .card-subtotal.pink   { background: #E91E63; }
+
+    /* 明細テーブル */
+    .detail-table { width: 100%; border-collapse: collapse; font-size: 0.82em; }
+    .detail-table th {
+      background: #f5f5f5; color: #888; font-weight: bold;
+      padding: 6px 8px; text-align: left; border-bottom: 1px solid #eee;
+    }
+    .detail-table td {
+      padding: 7px 8px; border-bottom: 1px dotted #eee; color: #555; vertical-align: top;
+    }
+    .detail-table tr:last-child td { border-bottom: none; }
+    .detail-table .amount { text-align: right; white-space: nowrap; font-weight: bold; color: #333; }
+    .detail-table .note   { color: #aaa; font-size: 0.9em; line-height: 1.5; }
+
+    /* 注記 */
+    .remark {
+      background: #FFF8E1; border-radius: 10px;
+      padding: 10px 14px; font-size: 0.82em; color: #795548;
+      line-height: 1.7; margin-top: 10px;
+    }
+    .remark strong { color: #E65100; }
+
+    /* 交通費ルート */
+    .route-item {
+      display: flex; align-items: center; gap: 6px;
+      padding: 7px 0; border-bottom: 1px dotted #eee;
+      font-size: 0.82em; color: #555;
+    }
+    .route-item:last-child { border-bottom: none; }
+    .route-from { color: #333; font-weight: bold; flex: 1; }
+    .route-arrow { color: #aaa; flex-shrink: 0; }
+    .route-to   { color: #333; font-weight: bold; flex: 1; }
+    .route-cost { color: #2196F3; font-weight: bold; white-space: nowrap; flex-shrink: 0; }
+    .route-day  {
+      font-size: 0.78em; font-weight: bold; color: white;
+      background: #78909C; padding: 2px 7px; border-radius: 10px;
+      white-space: nowrap; flex-shrink: 0;
+    }
+
+    /* 食事代リスト */
+    .meal-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 7px 0; border-bottom: 1px dotted #eee; font-size: 0.85em;
+    }
+    .meal-item:last-child { border-bottom: none; }
+    .meal-label { color: #555; }
+    .meal-label .meal-time {
+      display: inline-block; font-size: 0.78em; color: white;
+      background: #FF9800; padding: 1px 7px; border-radius: 8px;
+      margin-right: 6px;
+    }
+    .meal-label .meal-time.morning { background: #66BB6A; }
+    .meal-label .meal-time.night   { background: #5C6BC0; }
+    .meal-label .meal-time.other   { background: #78909C; }
+    .meal-amount { font-weight: bold; color: #333; white-space: nowrap; }
+    .meal-amount.free { color: #4CAF50; }
+
+    /* 合計テーブル */
+    .summary-card {
+      background: white; border-radius: 16px; padding: 18px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 14px;
+    }
+    .summary-row {
+      display: flex; justify-content: space-between;
+      padding: 8px 0; border-bottom: 1px dotted #eee;
+      font-size: 0.9em; color: #555;
+    }
+    .summary-row:last-child { border-bottom: none; }
+    .summary-row.total {
+      font-size: 1.05em; font-weight: bold; color: #333;
+      border-top: 2px solid #eee; margin-top: 4px; padding-top: 12px;
+    }
+    .summary-amount { font-weight: bold; color: #333; }
+
+    /* 更新日 */
+    .updated {
+      text-align: center; font-size: 0.78em; color: #aaa;
+      margin-top: 24px; padding-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ヘッダー -->
+  <div class="header">
+    <h1>🏔️🎣 花小 わんぱく5人組<br>夏休みキャンプ 旅費予算</h1>
+    <p>📅 2026年8月1日(土) ～ 2日(日)　📍 群馬県</p>
+  </div>
+
+  <!-- 決定バナー -->
+  <div class="decided-banner">
+    <div class="decided-label">✅ コース決定！</div>
+    <div class="decided-course">🏔️🎣 山・川コース（群馬県）</div>
+    <div class="decided-sub">アンケートの結果、山・川コースに決まりました！</div>
+  </div>
+
+  <!-- 総費用 -->
+  <div class="total-card">
+    <div class="total-label">💰 総費用見通し（おひとり様）</div>
+    <div class="total-amount">27,038<span class="total-unit"> 円/人</span></div>
+    <div class="total-note">
+      税込 ／ 2026年7月13日時点<br>
+      ※キャンプ場経由ラフティング予約で▲1,000円/人 交渉中🤝
+    </div>
+  </div>
+
+  <!-- 内訳サマリー -->
+  <div class="section-title">📋 費用内訳サマリー</div>
+  <div class="summary-card">
+    <div class="summary-row">
+      <span>🎣 レジャー費用</span>
+      <span class="summary-amount">133,400円（合計）</span>
+    </div>
+    <div class="summary-row">
+      <span>🏕️ 宿泊費用</span>
+      <span class="summary-amount">20,700円（合計）</span>
+    </div>
+    <div class="summary-row">
+      <span>🍖 食事代</span>
+      <span class="summary-amount">6,000円/人</span>
+    </div>
+    <div class="summary-row">
+      <span>🚗 交通費</span>
+      <span class="summary-amount">14,202円（合計）</span>
+    </div>
+    <div class="summary-row total">
+      <span>合計（おひとり様）</span>
+      <span class="summary-amount">約 27,038円/人</span>
+    </div>
+  </div>
+
+  <!-- レジャー費用 -->
+  <div class="section-title">🎣 レジャー費用</div>
+
+  <!-- 大崎つりぼり -->
+  <div class="cost-card">
+    <div class="card-header">
+      <div class="card-title">🎣 大崎つりぼり<br><span style="font-size:0.85em;color:#888;">群馬県前橋市</span></div>
+      <div class="card-subtotal">21,200円</div>
+    </div>
+    <table class="detail-table">
+      <tr>
+        <th>項目</th>
+        <th>単価</th>
+        <th>数量</th>
+        <th class="amount">小計</th>
+      </tr>
+      <tr>
+        <td>釣り（一般）</td>
+        <td>2,310円/人</td>
+        <td>×2</td>
+        <td class="amount">4,620円</td>
+      </tr>
+      <tr>
+        <td>釣り（ファミリー）</td>
+        <td>6,930円</td>
+        <td>×1</td>
+        <td class="amount">6,930円</td>
+      </tr>
+      <tr>
+        <td>見学入場</td>
+        <td>330円/人</td>
+        <td>×1</td>
+        <td class="amount">330円</td>
+      </tr>
+      <tr>
+        <td>つかみ捕り体験</td>
+        <td>1,800円/3匹</td>
+        <td>×2</td>
+        <td class="amount">3,600円</td>
+      </tr>
+      <tr>
+        <td>調理代</td>
+        <td>260円/匹</td>
+        <td>×22匹</td>
+        <td class="amount">5,720円</td>
+      </tr>
+    </table>
+    <div class="remark">
+      📝 釣竿×5本、虹鱒×22匹を計上<br>
+      📝 子供5名が各々最大4匹/人まで食べられるプランを選定<br>
+      📝 大人3名は子供たちの余りを食す（臨機応変対応）
+    </div>
+  </div>
+
+  <!-- 水上カッパCLUB -->
+  <div class="cost-card">
+    <div class="card-header">
+      <div class="card-title">🚣 水上カッパCLUB<br><span style="font-size:0.85em;color:#888;">群馬県みなかみ町</span></div>
+      <div class="card-subtotal blue">112,200円</div>
+    </div>
+    <table class="detail-table">
+      <tr>
+        <th>項目</th>
+        <th>単価</th>
+        <th>数量</th>
+        <th class="amount">小計</th>
+      </tr>
+      <tr>
+        <td>ラフティング＆キャニオニング<br>ランチ付き（大人）</td>
+        <td>15,400円/人</td>
+        <td>×3名</td>
+        <td class="amount">46,200円</td>
+      </tr>
+      <tr>
+        <td>ラフティング＆キャニオニング<br>ランチ付き（子供）</td>
+        <td>13,200円/人</td>
+        <td>×5名</td>
+        <td class="amount">66,000円</td>
+      </tr>
+    </table>
+    <div class="remark">
+      📝 AM・PMでラフティングとキャニオニングをそれぞれ体験<br>
+      📝 昼食は当該CLUBハウス内のランチ付きパックを選定<br>
+      <strong>📝 キャンプ場経由での予約で▲1,000円/人の価格低減交渉中🤝</strong>
+    </div>
+  </div>
+
+  <!-- 宿泊費用 -->
+  <div class="section-title">🏕️ 宿泊費用</div>
+  <div class="cost-card">
+    <div class="card-header">
+      <div class="card-title">🏕️ みなかみアウトドア ログ&オートキャンプ場<br><span style="font-size:0.85em;color:#888;">群馬県みなかみ町</span></div>
+      <div class="card-subtotal orange">15,500円</div>
+    </div>
+    <table class="detail-table">
+      <tr>
+        <th>項目</th>
+        <th>単価</th>
+        <th>数量</th>
+        <th class="amount">小計</th>
+      </tr>
+      <tr>
+        <td>宿泊（ロフト付き）</td>
+        <td>15,500円/棟</td>
+        <td>×1棟</td>
+        <td class="amount">15,500円</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- 鈴森の湯 -->
+  <div class="cost-card">
+    <div class="card-header">
+      <div class="card-title">♨️ 鈴森の湯<br><span style="font-size:0.85em;color:#888;">群馬県みなかみ町</span></div>
+      <div class="card-subtotal orange">5,200円</div>
+    </div>
+    <table class="detail-table">
+      <tr>
+        <th>項目</th>
+        <th>単価</th>
+        <th>数量</th>
+        <th class="amount">小計</th>
+      </tr>
+      <tr>
+        <td>入浴（大人）</td>
+        <td>900円/人</td>
+        <td>×3名</td>
+        <td class="amount">2,700円</td>
+      </tr>
+      <tr>
+        <td>入浴（子供）</td>
+        <td>500円/人</td>
+        <td>×5名</td>
+        <td class="amount">2,500円</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- 食事代 -->
+  <div class="section-title">🍖 食事代</div>
+  <div class="cost-card">
+    <div class="card-header">
+      <div class="card-title">🍽️ 食事代明細</div>
+      <div class="card-subtotal pink">6,000円/人</div>
+    </div>
+    <div class="meal-item">
+      <div class="meal-label">
+        <span class="meal-time">1日目 昼</span>つりぼり代に含む（唐揚げ調理代込み）
+      </div>
+      <div class="meal-amount free">無料</div>
+    </div>
+    <div class="meal-item">
+      <div class="meal-label">
+        <span class="meal-time night">1日目 夜</span>BBQ（飲み物・炭・薪代含む）
+      </div>
+      <div class="meal-amount">1,500円/人</div>
+    </div>
+    <div class="meal-item">
+      <div class="meal-label">
+        <span class="meal-time night">1日目 夜</span>花火
+      </div>
+      <div class="meal-amount">700円/人</div>
+    </div>
+    <div class="meal-item">
+      <div class="meal-label">
+        <span class="meal-time morning">2日目 朝</span>パン・おにぎりなど
+      </div>
+      <div class="meal-amount">500円/人</div>
+    </div>
+    <div class="meal-item">
+      <div class="meal-label">
+        <span class="meal-time">2日目 昼</span>ラフティング代に含む（ランチ付き）
+      </div>
+      <div class="meal-amount free">無料</div>
+    </div>
+    <div class="meal-item">
+      <div class="meal-label">
+        <span class="meal-time night">2日目 夜</span>サービスエリアで夕食
+      </div>
+      <div class="meal-amount">1,300円/人</div>
+    </div>
+    <div class="meal-item">
+      <div class="meal-label">
+        <span class="meal-time other">帰路</span>お土産代
+      </div>
+      <div class="meal-amount">2,000円/人</div>
+    </div>
+  </div>
+
+  <!-- 交通費 -->
+  <div class="section-title">🚗 交通費</div>
+  <div class="cost-card">
+    <div class="card-header">
+      <div class="card-title">🚗 移動ルート別費用</div>
+      <div class="card-subtotal blue">14,202円（合計）</div>
+    </div>
+
+    <div class="remark" style="margin-bottom:12px; margin-top:0;">
+      📝 燃料代：一律12円/km で算出<br>
+      📝 移動車両：2台想定
+    </div>
+
+    <div class="route-item">
+      <span class="route-day">1日目</span>
+      <span class="route-from">小前田北公園</span>
+      <span class="route-arrow">→</span>
+      <span class="route-to">大崎釣り堀</span>
+      <span class="route-cost">3,622円</span>
+    </div>
+    <div class="route-item">
+      <span class="route-day">1日目</span>
+      <span class="route-from">大崎釣り堀</span>
+      <span class="route-arrow">→</span>
+      <span class="route-to">キャンプ場</span>
+      <span class="route-cost">3,126円</span>
+    </div>
+    <div class="route-item">
+      <span class="route-day">1日目</span>
+      <span class="route-from">キャンプ場</span>
+      <span class="route-arrow">→</span>
+      <span class="route-to">鈴森の湯</span>
+      <span class="route-cost">166円</span>
+    </div>
+    <div class="route-item">
+      <span class="route-day">1日目</span>
+      <span class="route-from">鈴森の湯</span>
+      <span class="route-arrow">→</span>
+      <span class="route-to">キャンプ場</span>
+      <span class="route-cost">166円</span>
+    </div>
+    <div class="route-item">
+      <span class="route-day">2日目</span>
+      <span class="route-from">キャンプ場</span>
+      <span class="route-arrow">→</span>
+      <span class="route-to">ラフティング受付</span>
+      <span class="route-cost">46円</span>
+    </div>
+    <div class="route-item">
+      <span class="route-day">2日目</span>
+      <span class="route-from">ラフティング受付</span>
+      <span class="route-arrow">→</span>
+      <span class="route-to">小前田北公園</span>
+      <span class="route-cost">7,078円</span>
+    </div>
+  </div>
+
+  <!-- 更新日 -->
+  <div class="updated">最終更新：2026年7月13日</div>
+
+</div><!-- /container -->
+</body>
+</html>
